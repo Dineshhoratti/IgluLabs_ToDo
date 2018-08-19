@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="IgluLabs">
+	<property environment="env" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.5" />
+	<property name="source" value="1.5" />
+	<path id="Survey.classpath">
+		<pathelement path="lib/json/commons-beanutils-1.7.jar" />
+		<pathelement path="lib/json/commons-collections.jar" />
+		<pathelement path="lib/json/commons-lang.jar" />
+		<pathelement path="lib/json/commons-logging-1.1.1.jar" />
+		<pathelement path="lib/json/ezmorph.jar" />
+		<pathelement path="lib/json/json-lib-2.2.2-jdk15.jar" />
+		<pathelement path="lib/json/json-smart-1.0.8.jar" />
+		<pathelement path="lib/json/xom-1.2.10.jar" />
+		<pathelement path="lib/json/json-20131018.jar" />
+		<pathelement path="lib/servlet-lib/javax.servlet-api.jar" />
+		<pathelement path="lib/json/javax.servlet-api.jar" />
+		<pathelement path="lib/json/mysql-connector-java-3.0.17-ga-bin.jar" />
+
+	</path>
+
+	<target name="init">
+		<mkdir dir="build/web" />
+		<mkdir dir="build/web/WEB-INF/classes" />
+		<mkdir dir="build/web/WEB-INF/classes/META-INF" />
+		<mkdir dir="dist" />
+
+		<copy includeemptydirs="false" todir="build/web/WEB-INF/classes">
+			<fileset dir="src" includes="**/*.properties,**/*.xml" />
+		</copy>
+		<copy includeemptydirs="false" todir="build/web/WEB-INF/classes/META-INF">
+			<fileset dir="src" includes="**/*.xml,**/*.MF" />
+		</copy>
+	</target>
+	<target name="clean">
+		<delete dir="build/web" />
+	</target>
+	<target depends="clean" name="cleanall" />
+	<target depends="init" name="build">
+		<echo message="${ant.project.name}: ${ant.file}" />
+		<javac target="${target}" debug="true" destdir="build/web/WEB-INF/classes" debuglevel="${debuglevel}" source="${source}" includeAntRuntime="false">
+			<src path="src" />
+			<classpath refid="Survey.classpath" />
+		</javac>
+
+	</target>
+
+	<target depends="build" name="war">
+		<war destfile="dist/IgluLabs.war" webxml="WebContent/WEB-INF/web.xml">
+			<fileset dir="lib" />
+			<lib dir="lib/json" includes="**/*.jar" />
+			<classes dir="build/web/WEB-INF/classes" />
+			<fileset dir="web" />
+		</war>
+	</target>
+
+
+	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects" />
+	<property name="build.home" value="build" />
+	<property name="build.classes.home" value="build/web" />
+
+</project>
